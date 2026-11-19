@@ -1,5 +1,5 @@
 # Builds, checks and publishes this collection's ontologies with the reusable
-# OntoStart build workflow, pinned to release v1.6 of the engine (update both lines together).
+# OntoStart build workflow, pinned to release v1.7 of the engine (update both lines together).
 #
 # GIST_TOKEN (and W3ID_TOKEN for w3id-pr.yml) are secrets of the environment
 # "ontostart-secrets", limited to the main branch; they are not passed from here.
@@ -42,12 +42,15 @@ jobs:
     # The template repository itself has no w3id name yet, so it
     # does not build; repositories created from it do.
     if: github.actor != 'github-actions[bot]' && !github.event.repository.is_template
-    uses: micheldumontier/ontostart/.github/workflows/build.yml@v1.6
+    uses: micheldumontier/ontostart/.github/workflows/build.yml@v1.7
     with:
-      engine-ref: v1.6
+      engine-ref: v1.7
       only: ${{ inputs.only || '' }}
       bump: ${{ github.event_name == 'workflow_dispatch' && format('{0}', inputs.bump) || '' }}
     # Tokens are passed by name so this works from any account; they live only
     # in the ontostart-secrets environment.
     secrets:
       GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+      # Optional: register this collection's published ontologies in OntoExplorer.
+      # Unset => the engine's ontoexplorer job no-ops. See README.md.
+      ONTOEXPLORER_TOKEN: ${{ secrets.ONTOEXPLORER_TOKEN }}
